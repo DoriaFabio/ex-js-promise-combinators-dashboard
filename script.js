@@ -9,16 +9,18 @@ const getDashboardData = async query => {
         const desPromise = fetchJson(`https://boolean-spec-frontend.vercel.app/freetestapi/destinations?search=${query}`);
         const wetPromise = fetchJson(`https://boolean-spec-frontend.vercel.app/freetestapi/weathers?search=${query}`);
         const airPromise = fetchJson(`https://boolean-spec-frontend.vercel.app/freetestapi/airports?search=${query}`);
-        const promises = [desPromise, wetPromise, airPromise];
+        const promises = [desPromise, wetPromise, airPromise]; //? Creo l'array delle promesse
         const [destination, weather, airport] = await Promise.all(promises); //? Destrutturazione
         // const travel = await Promise.all(promises); //? Senza destrutturazione
         console.log();
         return {
+            //todo Ritorno i valori senza destrutturazione
             // city: travel[0][0].name,
             // country: travel[0][0].country,
             // temperature: travel[1][0].temperature,
             // weather: travel[1][0].weather_description,
             // airport: travel[2][0].name
+            //todo Ritorno i valori con destrutturazione
             city: destination[0].name,
             country: destination[0].country,
             temperature: weather[0].temperature,
@@ -40,5 +42,4 @@ getDashboardData("london")
             `The main airport is ${data.airport}.\n`
         );
     })
-    .catch(error => console.error(error))
-    .finally(console.log("Fine"));
+    .catch(error => console.error(error));
