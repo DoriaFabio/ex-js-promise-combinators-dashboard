@@ -1,15 +1,20 @@
-async function fetchJson(url) { 
+async function fetchJson(url) {
     const res = await fetch(url);
     const obj = await res.json();
     return obj;
-} 
+}
 
 const getDashboardData = async query => {
     try {
-        const desPromise = fetchJson(`https://boolean-spec-frontend.vercel.app/freetestapi/destinations?search=${query}`);
-        const wetPromise = fetchJson(`https://boolean-spec-frontend.vercel.app/freetestapi/weathers?search=${query}`);
-        const airPromise = fetchJson(`https://boolean-spec-frontend.vercel.app/freetestapi/airports?search=${query}`);
-        const promises = [desPromise, wetPromise, airPromise]; //? Creo l'array delle promesse
+        const endPoints = ["destinations", "weathers", "airports"];
+        const promises = endPoints.map(end => {
+            return fetchJson(`https://boolean-spec-frontend.vercel.app/freetestapi/${end}?search=${query}`);
+        }) //? Array delle promesse creato con il metodo map
+        // const desPromise = fetchJson(`https://boolean-spec-frontend.vercel.app/freetestapi/destinations?search=${query}`);
+        // const wetPromise = fetchJson(`https://boolean-spec-frontend.vercel.app/freetestapi/weathers?search=${query}`);
+        // const airPromise = fetchJson(`https://boolean-spec-frontend.vercel.app/freetestapi/airports?search=${query}`);
+        // const promises = [desPromise, wetPromise, airPromise];
+        //? Creo l'array delle promesse
         const [destination, weather, airport] = await Promise.all(promises); //? Destrutturazione
         // const travel = await Promise.all(promises); //? Senza destrutturazione
         console.log();
@@ -27,10 +32,10 @@ const getDashboardData = async query => {
             weather: weather[0].weather_description,
             airport: airport[0].name
         }
-    } catch(err) {
+    } catch (err) {
         throw new Error(`Errore nel recupero dei dati ${err.message}`);
     }
-    
+
 }
 
 getDashboardData("london")
